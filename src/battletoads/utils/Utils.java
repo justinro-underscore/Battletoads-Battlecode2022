@@ -1,4 +1,4 @@
-package battletoads;
+package battletoads.utils;
 
 import battlecode.common.Direction;
 

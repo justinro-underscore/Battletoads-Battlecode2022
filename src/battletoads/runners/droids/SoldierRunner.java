@@ -1,7 +1,7 @@
-package battletoads.droidrunners;
+package battletoads.runners.droids;
 
 import battlecode.common.*;
-import battletoads.Utils;
+import battletoads.utils.Utils;
 
 public class SoldierRunner {
 

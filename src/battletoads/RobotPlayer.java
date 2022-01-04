@@ -1,7 +1,9 @@
 package battletoads;
 
 import battlecode.common.*;
-import battletoads.droidrunners.*;
+import battletoads.runners.buildings.ArchonRunner;
+import battletoads.runners.droids.MinerRunner;
+import battletoads.runners.droids.SoldierRunner;
 
 /**
  * RobotPlayer is the class that describes your main robot strategy.
