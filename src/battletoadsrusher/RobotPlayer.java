@@ -26,21 +26,12 @@ public strictfp class RobotPlayer {
      **/
     @SuppressWarnings("unused")
     public static void run(RobotController rc) throws GameActionException {
-
-        // Hello world! Standard output is very useful for debugging.
-        // Everything you say here will be directly viewable in your terminal when you run a match!
-        System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
-
-        // You can also use indicators to save debug notes in replays.
-        rc.setIndicatorString("Hello world!");
-
         while (true) {
             // This code runs during the entire lifespan of the robot, which is why it is in an infinite
             // loop. If we ever leave this loop and return from run(), the robot dies! At the end of the
             // loop, we call Clock.yield(), signifying that we've done everything we want to do.
 
             turnCount += 1;  // We have now been alive for one more turn!
-            System.out.println("Age: " + turnCount + "; Location: " + rc.getLocation());
 
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
             try {
@@ -52,9 +43,9 @@ public strictfp class RobotPlayer {
                     case ARCHON:     ArchonRunner.run(rc);  break;
                     case MINER:      MinerRunner.run(rc);   break;
                     case SOLDIER:    SoldierRunner.run(rc); break;
-                    case LABORATORY: // Examplefuncsplayer doesn't use any of these robot types below.
-                    case WATCHTOWER: // You might want to give them a try!
-                    case BUILDER:
+                    case BUILDER:    BuilderRunner.run(rc); break;
+                    case LABORATORY:
+                    case WATCHTOWER:
                     case SAGE:       break;
                 }
             } catch (GameActionException e) {

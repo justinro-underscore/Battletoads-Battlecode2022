@@ -5,25 +5,36 @@ import battletoadsrusher.Utils;
 
 public class ArchonRunner {
 
+    private static Direction[] possibleEnemyArchonDirections = new Direction[3];
+    private static int startingDirectionIdx = 0;
+
     /**
      * Run a single turn for an Archon.
      * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
      */
     public static void run(RobotController rc) throws GameActionException {
-        // Pick a direction to build in.
-        Direction dir = Utils.directions[Utils.rng.nextInt(Utils.directions.length)];
-        if (Utils.rng.nextBoolean()) {
-            // Let's try to build a miner.
-            rc.setIndicatorString("Trying to build a miner");
-            if (rc.canBuildRobot(RobotType.MINER, dir)) {
-                rc.buildRobot(RobotType.MINER, dir);
-            }
-        } else {
-        // Let's try to build a soldier.
-        rc.setIndicatorString("Trying to build a soldier");
-            if (rc.canBuildRobot(RobotType.SOLDIER, dir)) {
-                rc.buildRobot(RobotType.SOLDIER, dir);
+        if (possibleEnemyArchonDirections[0] == null) {
+            MapLocation currLocation = rc.getLocation();
+
+            // Radial symmetry
+            MapLocation enemyArchonLocation1 = new MapLocation(rc.getMapWidth() - currLocation.x - 1, rc.getMapHeight() - currLocation.y - 1);
+            possibleEnemyArchonDirections[0] = Utils.getDirectionFromVector(currLocation, enemyArchonLocation1);
+
+            // Vertical symmetry
+            MapLocation enemyArchonLocation2 = new MapLocation(currLocation.x, rc.getMapHeight() - currLocation.y - 1);
+            possibleEnemyArchonDirections[1] = Utils.getDirectionFromVector(currLocation, enemyArchonLocation2);
+
+            // Horizontal symmetry
+            MapLocation enemyArchonLocation3 = new MapLocation(rc.getMapWidth() - currLocation.x - 1, currLocation.y);
+            possibleEnemyArchonDirections[2] = Utils.getDirectionFromVector(currLocation, enemyArchonLocation3);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            Direction dir = possibleEnemyArchonDirections[(i + startingDirectionIdx) % 3];
+            if (rc.canBuildRobot(RobotType.BUILDER, dir)) {
+                rc.buildRobot(RobotType.BUILDER, dir);
             }
         }
+        startingDirectionIdx++;
     }
 }
