@@ -33,3 +33,11 @@ This is the Battlecode 2022 scaffold, containing an `examplefuncsplayer`. Read h
 - `./gradlew update`
     Update to the newest version! Run every so often
 
+
+## Useful Links
+
+- [Battletoads Battlecode Repo](https://github.com/justinro-underscore/Battletoads-Battlecode2022)
+- [Battlecode Dashboard](https://play.battlecode.org/home)
+- [Specs](https://play.battlecode.org/specs/2022/specs.md.html#appendix:otherresourcesandutilities/debugging)
+- [Javadocs](https://play.battlecode.org/javadocs/2022/index.html)
+- [Battlecode Source Code](https://github.com/battlecode/battlecode22)
