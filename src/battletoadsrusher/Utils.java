@@ -1,8 +1,9 @@
 package battletoadsrusher;
 
 import battlecode.common.Direction;
+import battlecode.common.MapLocation;
 
-import java.util.Random;
+import java.util.*;
 
 public class Utils {
 
@@ -14,15 +15,40 @@ public class Utils {
      */
     public static final Random rng = new Random(6147);
 
-    /** Array containing all the possible movement directions. */
-    public static final Direction[] directions = {
+    public static final Set<Direction> CARDINAL_DIRECTIONS = new HashSet<Direction>(Arrays.asList(
         Direction.NORTH,
-        Direction.NORTHEAST,
         Direction.EAST,
-        Direction.SOUTHEAST,
         Direction.SOUTH,
-        Direction.SOUTHWEST,
-        Direction.WEST,
-        Direction.NORTHWEST,
-    };
+        Direction.WEST
+    ));
+
+    public static Direction getDirectionFromVector(MapLocation ml1, MapLocation ml2) {
+        if (ml2.y > ml1.y) {
+            if (ml2.x < ml1.x) {
+                return Direction.NORTHWEST;
+            }
+            else if (ml2.x > ml1.x) {
+                return Direction.NORTHEAST;
+            }
+            return Direction.NORTH;
+        }
+        else if (ml2.y < ml1.y) {
+            if (ml2.x < ml1.x) {
+                return Direction.SOUTHWEST;
+            }
+            else if (ml2.x > ml1.x) {
+                return Direction.SOUTHEAST;
+            }
+            return Direction.SOUTH;
+        }
+        else {
+            if (ml2.x < ml1.x) {
+                return Direction.WEST;
+            }
+            else if (ml2.x > ml1.x) {
+                return Direction.EAST;
+            }
+            return Direction.CENTER;
+        }
+    }
 }
