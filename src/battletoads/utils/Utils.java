@@ -62,4 +62,9 @@ public class Utils {
             return Direction.CENTER;
         }
     }
+
+    //TODO ints 0-3 are going to store information on the archons location.
+    //TODO internally they'll be used as strings, but use valuesOf() for storage;
+    //TODO for example, say the enemy archon is at location (45, 21), the
+    //TODO integer stored will be 4521
 }
