@@ -103,9 +103,9 @@ public class MinerRunner {
         for (int[] point : SENSE_POINTS) {
             MapLocation loc = new MapLocation(currLoc.x + point[0], currLoc.y + point[1]);
 
-            // Verify the map location is valid
-            if ((loc.x >= 0 && loc.x < rc.getMapWidth() && loc.y >= 0 && loc.y < rc.getMapHeight())) {
-                try {
+            try {
+                // Verify the map location is valid
+                if (rc.onTheMap(loc)) {
                     // If there is lead here
                     if (rc.senseLead(loc) > 0) {
                         // Verify there is no miner currently mining this
@@ -115,10 +115,10 @@ public class MinerRunner {
                         }
                     }
                 }
-                // This should never throw an exception
-                catch (GameActionException ex) {
-                    Logging.error(String.format("Robot [%d] threw error while finding next lead at {%d, %d}: %s", rc.getID(), loc.x, loc.y, ex.getMessage()));
-                }
+            }
+            // This should never throw an exception
+            catch (GameActionException ex) {
+                Logging.error(String.format("Robot [%d] threw error while finding next lead at {%d, %d}: %s", rc.getID(), loc.x, loc.y, ex.getMessage()));
             }
 
         }
