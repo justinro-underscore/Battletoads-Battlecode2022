@@ -16,7 +16,7 @@ public class RobotUtils {
         /* The following means we didn't move */
         TARGET_BLOCKED, // If the target location is blocked and the robot is next to the target
         COOLDOWN_REACHED, // If the robot cannot move any longer
-        PATH_BLOCKED, // If there is a robot in the way TODO Varun make our algorithm better so that this doesn't end the turn
+        PATH_BLOCKED, // If there is a robot in the way
     }
 
     /**
@@ -45,7 +45,6 @@ public class RobotUtils {
      * @return True if the robot has reached the destination
      */
     public static boolean moveTo(RobotController rc, MapLocation loc) throws GameActionException {
-        // TODO Varun make this better (this should work the same as moveToVerbose)
         Direction dir = rc.getLocation().directionTo(loc);
         if (rc.canMove(dir)) {
             rc.move(dir);
@@ -62,7 +61,6 @@ public class RobotUtils {
      * @return The result of the attempted move
      */
     public static MoveToResult moveToVerbose(RobotController rc, MapLocation loc) throws GameActionException {
-        // TODO Varun make this better (this should work the same as moveTo)
         if (!rc.isMovementReady()) {
             return MoveToResult.COOLDOWN_REACHED;
         }
@@ -73,7 +71,7 @@ public class RobotUtils {
             if (nextLocation.equals(loc)) {
                 return MoveToResult.TARGET_BLOCKED;
             }
-            // TODO We should change our algorithm so that this does not end the move
+
             return MoveToResult.PATH_BLOCKED;
         }
 
