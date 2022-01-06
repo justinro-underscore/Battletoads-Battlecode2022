@@ -4,6 +4,7 @@ import battlecode.common.*;
 import battletoads.utils.Logging;
 import battletoads.utils.RobotUtils;
 import battletoads.utils.Utils;
+import battletoads.utils.RobotUtils.MoveToResult;
 
 public class MinerRunner {
 
@@ -55,7 +56,18 @@ public class MinerRunner {
         if (mineLoc != null) {
             // TODO should navigate to the square adjacent to the mining location, since it can still mine from there
             // TODO should verify that no one is currently mining the lead it is going for
-            if (RobotUtils.moveTo(rc, mineLoc)) {
+
+            // if (RobotUtils.moveTo(rc, mineLoc)) {
+            //     currState = MinerState.MINING;
+            //     return false;
+            // }
+
+            MoveToResult res;
+            do {
+                res = RobotUtils.moveToVerbose(rc, mineLoc);
+            }
+            while (res == MoveToResult.MOVED);
+            if (res == MoveToResult.TARGET_REACHED) {
                 currState = MinerState.MINING;
                 return false;
             }
