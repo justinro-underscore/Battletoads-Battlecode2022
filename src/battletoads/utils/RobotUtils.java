@@ -1,6 +1,7 @@
 package battletoads.utils;
 
 import battlecode.common.*;
+import battletoads.planning.GreedyPlanner;
 
 /**
  * Utility functions that are used to manipulate a RobotController
@@ -18,6 +19,8 @@ public class RobotUtils {
         COOLDOWN_REACHED, // If the robot cannot move any longer
         PATH_BLOCKED, // If there is a robot in the way
     }
+
+    private static GreedyPlanner planner;
 
     /**
      * Returns whether or not a move was successful based on the move result
@@ -61,11 +64,16 @@ public class RobotUtils {
      * @return The result of the attempted move
      */
     public static MoveToResult moveToVerbose(RobotController rc, MapLocation loc) throws GameActionException {
+        if (planner == null) {
+            planner = new GreedyPlanner(rc);
+        }
+
         if (!rc.isMovementReady()) {
             return MoveToResult.COOLDOWN_REACHED;
         }
 
-        Direction dir = rc.getLocation().directionTo(loc);
+        Direction dir = planner.GreedyPlan(loc);
+        // Direction dir = rc.getLocation().directionTo(loc);
         MapLocation nextLocation = rc.getLocation().add(dir);
         if (rc.isLocationOccupied(nextLocation)) {
             if (nextLocation.equals(loc)) {
@@ -76,6 +84,7 @@ public class RobotUtils {
         }
 
         // Move the robot, IDEALLY shouldn't throw an exception
+        rc.move(dir);
         if (nextLocation.equals(loc)) {
             return MoveToResult.TARGET_REACHED;
         }
