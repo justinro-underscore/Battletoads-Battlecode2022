@@ -20,7 +20,7 @@ public class BuilderRunner {
             RobotInfo[] nearbyRobots = rc.senseNearbyRobots(rc.getLocation(), 2, rc.getTeam());
             RobotInfo archon = Arrays.stream(nearbyRobots).filter(ri -> ri.getType() == RobotType.ARCHON).findFirst().get();
             MapLocation archonLocation = archon.getLocation();
-            Direction enemyArchonDirection = Utils.getDirectionFromVector(archonLocation, rc.getLocation());
+            Direction enemyArchonDirection = archonLocation.directionTo(rc.getLocation());
             // Radial symmetry
             if (!Utils.CARDINAL_DIRECTIONS.contains(enemyArchonDirection)) {
                 enemyArchonLocation = new MapLocation(rc.getMapWidth() - archonLocation.x - 1, rc.getMapHeight() - archonLocation.y - 1);
@@ -35,7 +35,7 @@ public class BuilderRunner {
             }
         }
     
-        Direction dir = Utils.getDirectionFromVector(rc.getLocation(), enemyArchonLocation);
+        Direction dir = rc.getLocation().directionTo(enemyArchonLocation);
         if (rc.canMove(dir)) {
             rc.move(dir);
         }

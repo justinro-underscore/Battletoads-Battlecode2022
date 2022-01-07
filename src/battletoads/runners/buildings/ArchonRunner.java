@@ -18,15 +18,15 @@ public class ArchonRunner {
 
             // Radial symmetry
             MapLocation enemyArchonLocation1 = new MapLocation(rc.getMapWidth() - currLocation.x - 1, rc.getMapHeight() - currLocation.y - 1);
-            possibleEnemyArchonDirections[0] = Utils.getDirectionFromVector(currLocation, enemyArchonLocation1);
+            possibleEnemyArchonDirections[0] = currLocation.directionTo(enemyArchonLocation1);
 
             // Vertical symmetry
             MapLocation enemyArchonLocation2 = new MapLocation(currLocation.x, rc.getMapHeight() - currLocation.y - 1);
-            possibleEnemyArchonDirections[1] = Utils.getDirectionFromVector(currLocation, enemyArchonLocation2);
+            possibleEnemyArchonDirections[1] = currLocation.directionTo(enemyArchonLocation2);
 
             // Horizontal symmetry
             MapLocation enemyArchonLocation3 = new MapLocation(rc.getMapWidth() - currLocation.x - 1, currLocation.y);
-            possibleEnemyArchonDirections[2] = Utils.getDirectionFromVector(currLocation, enemyArchonLocation3);
+            possibleEnemyArchonDirections[2] = currLocation.directionTo(enemyArchonLocation3);
         }
 
         for (int i = 0; i < 3; i++) {

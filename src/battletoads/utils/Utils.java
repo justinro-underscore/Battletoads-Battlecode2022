@@ -33,37 +33,6 @@ public class Utils {
         Direction.WEST
     ));
 
-    // TODO Replace with MapLocation.directionTo
-    public static Direction getDirectionFromVector(MapLocation ml1, MapLocation ml2) {
-        if (ml2.y > ml1.y) {
-            if (ml2.x < ml1.x) {
-                return Direction.NORTHWEST;
-            }
-            else if (ml2.x > ml1.x) {
-                return Direction.NORTHEAST;
-            }
-            return Direction.NORTH;
-        }
-        else if (ml2.y < ml1.y) {
-            if (ml2.x < ml1.x) {
-                return Direction.SOUTHWEST;
-            }
-            else if (ml2.x > ml1.x) {
-                return Direction.SOUTHEAST;
-            }
-            return Direction.SOUTH;
-        }
-        else {
-            if (ml2.x < ml1.x) {
-                return Direction.WEST;
-            }
-            else if (ml2.x > ml1.x) {
-                return Direction.EAST;
-            }
-            return Direction.CENTER;
-        }
-    }
-
     /**
      * This defines all of the points inside a circle based on the radius squared
      * More can be added from the circlepoints.py script in python directory
