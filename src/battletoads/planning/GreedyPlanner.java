@@ -40,9 +40,9 @@ public class GreedyPlanner {
      * @return Best direction to move to reach goal
      * @throws GameActionException
      */
-    public Direction GreedyPlan( Direction direction ) throws GameActionException {
+    public Direction plan( Direction direction ) throws GameActionException {
         MapLocation newLocation = robotController.getLocation().add( direction );
-        Direction nextDirection = GreedyPlan( newLocation, 1, true );
+        Direction nextDirection = plan( newLocation, 1, true );
 
         return ( nextDirection );
     }
@@ -53,8 +53,8 @@ public class GreedyPlanner {
      * @return Best direction to move to reach goal
      * @throws GameActionException
      */
-    public Direction GreedyPlan( MapLocation destination ) throws GameActionException {
-        return ( GreedyPlan( destination, 1, true ) );
+    public Direction plan( MapLocation destination ) throws GameActionException {
+        return ( plan( destination, 1, true ) );
     }
 
     /**
@@ -64,7 +64,7 @@ public class GreedyPlanner {
      * @throws GameActionException
      */
     // TODO: add option to increase sensing radius
-    public Direction GreedyPlan( MapLocation destination, int sensingRadius, boolean forceMove ) throws GameActionException {
+    public Direction plan( MapLocation destination, int sensingRadius, boolean forceMove ) throws GameActionException {
         // Default to center direction (this only happens if we cannot move in any direction)
         Direction nextDirection = Direction.CENTER;
 
