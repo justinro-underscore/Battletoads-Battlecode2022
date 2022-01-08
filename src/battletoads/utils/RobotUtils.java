@@ -1,7 +1,7 @@
 package battletoads.utils;
 
 import battlecode.common.*;
-import battletoads.planning.GreedyPlanner;
+import battletoads.planning.*;
 
 /**
  * Utility functions that are used to manipulate a RobotController
@@ -48,7 +48,12 @@ public class RobotUtils {
      * @return True if the robot has reached the destination
      */
     public static boolean moveTo(RobotController rc, MapLocation loc) throws GameActionException {
-        Direction dir = rc.getLocation().directionTo(loc);
+        //Direction dir = rc.getLocation().directionTo(loc);
+        if (planner == null) {
+            planner = new GreedyPlanner(rc);
+        }
+        Direction dir = planner.plan(loc);
+
         if (rc.canMove(dir)) {
             rc.move(dir);
         }
@@ -72,11 +77,13 @@ public class RobotUtils {
             return MoveToResult.COOLDOWN_REACHED;
         }
 
-        Direction dir = planner.GreedyPlan(loc);
+        Direction dir = planner.plan(loc);
         // Direction dir = rc.getLocation().directionTo(loc);
         MapLocation nextLocation = rc.getLocation().add(dir);
-        if (rc.isLocationOccupied(nextLocation)) {
-            if (nextLocation.equals(loc)) {
+
+        // If next direction is center, planning found no move poassible
+        if (dir == Direction.CENTER || !rc.canMove(dir)) {
+            if (rc.getLocation().isAdjacentTo(loc)) {
                 return MoveToResult.TARGET_BLOCKED;
             }
 
