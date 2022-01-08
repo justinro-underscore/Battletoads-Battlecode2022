@@ -34,6 +34,15 @@ public class Utils {
     ));
 
     /**
+     * Returns a random Direction.
+     *
+     * @return a random Direction
+     */
+    public static Direction getRandomDirection() {
+        return directions[(int) ( Math.random() * directions.length )];
+    }
+
+    /**
      * This defines all of the points inside a circle based on the radius squared
      * More can be added from the circlepoints.py script in python directory
      */

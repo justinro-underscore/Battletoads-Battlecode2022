@@ -11,9 +11,9 @@ import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
 import battletoads.utils.Logging;
-import battletoads.planning.util.Directions;
-import battletoads.planning.util.ASComparator;
-import battletoads.planning.util.ASLocation;
+import battletoads.utils.Utils;
+import battletoads.planning.location.ASComparator;
+import battletoads.planning.location.ASLocation;
 
 /**
  * A* planning
@@ -121,7 +121,7 @@ public class ASPlanner {
 
             // Add adj locations
             MapLocation currMapLocation = currLocation.getLocation();
-            for ( Direction direction : Directions.directions ) {
+            for ( Direction direction : Utils.directions ) {
                 MapLocation adjLoc = currMapLocation.add( direction );
 
                 if ( !visited.contains( adjLoc )

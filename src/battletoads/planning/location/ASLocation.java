@@ -1,4 +1,4 @@
-package battletoads.planning.util;
+package battletoads.planning.location;
 
 import battlecode.common.MapLocation;
 

@@ -7,7 +7,9 @@ import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
-import battletoads.planning.util.*;
+import battletoads.utils.Utils;
+import battletoads.planning.location.Location;
+import battletoads.planning.location.LocationComparator;
 
 /**
  * Path planning using a simple, short sighted, greedy search
@@ -70,7 +72,7 @@ public class GreedyPlanner {
 
         if ( locations.isEmpty() ) {
             // Add adjacent robot tiles to queue
-            for ( Direction direction : Directions.directions ) {
+            for ( Direction direction : Utils.directions ) {
                 MapLocation adjLoc = robotController.adjacentLocation( direction );
                 if ( robotController.onTheMap( adjLoc ) ) {
                     double passability = robotController.senseRubble( adjLoc );
