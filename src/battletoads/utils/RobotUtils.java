@@ -82,7 +82,7 @@ public class RobotUtils {
         MapLocation nextLocation = rc.getLocation().add(dir);
 
         // If next direction is center, planning found no move poassible
-        if (dir == Direction.CENTER) {
+        if (dir == Direction.CENTER || !rc.canMove(dir)) {
             if (rc.getLocation().isAdjacentTo(loc)) {
                 return MoveToResult.TARGET_BLOCKED;
             }
