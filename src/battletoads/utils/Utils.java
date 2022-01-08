@@ -43,8 +43,18 @@ public class Utils {
         put(53, new int[][]{{0,0},{0,1},{0,-1},{1,0},{-1,0},{1,1},{1,-1},{-1,1},{-1,-1},{0,2},{0,-2},{2,0},{-2,0},{1,2},{1,-2},{-1,2},{-1,-2},{2,1},{2,-1},{-2,1},{-2,-1},{2,2},{2,-2},{-2,2},{-2,-2},{0,3},{0,-3},{3,0},{-3,0},{1,3},{1,-3},{-1,3},{-1,-3},{3,1},{3,-1},{-3,1},{-3,-1},{2,3},{2,-3},{-2,3},{-2,-3},{3,2},{3,-2},{-3,2},{-3,-2},{0,4},{0,-4},{4,0},{-4,0},{1,4},{1,-4},{-1,4},{-1,-4},{4,1},{4,-1},{-4,1},{-4,-1},{3,3},{3,-3},{-3,3},{-3,-3},{2,4},{2,-4},{-2,4},{-2,-4},{4,2},{4,-2},{-4,2},{-4,-2},{0,5},{0,-5},{3,4},{3,-4},{-3,4},{-3,-4},{4,3},{4,-3},{-4,3},{-4,-3},{5,0},{-5,0},{1,5},{1,-5},{-1,5},{-1,-5},{5,1},{5,-1},{-5,1},{-5,-1},{2,5},{2,-5},{-2,5},{-2,-5},{5,2},{5,-2},{-5,2},{-5,-2},{4,4},{4,-4},{-4,4},{-4,-4},{3,5},{3,-5},{-3,5},{-3,-5},{5,3},{5,-3},{-5,3},{-5,-3},{0,6},{0,-6},{6,0},{-6,0},{1,6},{1,-6},{-1,6},{-1,-6},{6,1},{6,-1},{-6,1},{-6,-1},{2,6},{2,-6},{-2,6},{-2,-6},{6,2},{6,-2},{-6,2},{-6,-2},{4,5},{4,-5},{-4,5},{-4,-5},{5,4},{5,-4},{-5,4},{-5,-4},{3,6},{3,-6},{-3,6},{-3,-6},{6,3},{6,-3},{-6,3},{-6,-3},{0,7},{0,-7},{7,0},{-7,0},{1,7},{1,-7},{-1,7},{-1,-7},{5,5},{5,-5},{-5,5},{-5,-5},{7,1},{7,-1},{-7,1},{-7,-1},{4,6},{4,-6},{-4,6},{-4,-6},{6,4},{6,-4},{-6,4},{-6,-4},{2,7},{2,-7},{-2,7},{-2,-7},{7,2},{7,-2},{-7,2},{-7,-2}});
     }};
 
-    //TODO ints 0-3 are going to store information on the archons location.
-    //TODO internally they'll be used as strings, but use valuesOf() for storage;
-    //TODO for example, say the enemy archon is at location (45, 21), the
-    //TODO integer stored will be 4521
+    /**
+     * Shared array indices
+     */
+    public static int ARR_IDX_SOLDIER_1 = 0; // TODO ints 0-3 are going to store information on the archons location.
+    public static int ARR_IDX_SOLDIER_2 = 1; // TODO internally they'll be used as strings, but use valuesOf() for storage;
+    public static int ARR_IDX_SOLDIER_3 = 2; // TODO for example, say the enemy archon is at location (45, 21), the
+    public static int ARR_IDX_SOLDIER_4 = 3; // TODO integer stored will be 4521
+    public static int ARR_IDX_MINER_1 = 4;
+    public static int ARR_IDX_MINER_2 = 5;
+    public static int ARR_IDX_MINER_3 = 6;
+    public static int ARR_IDX_MINER_4 = 7;
+    public static int ARR_IDX_MINER_5 = 8;
+    public static int ARR_IDX_MINER_6 = 9;
+    public static int ARR_IDX_INIT = 63; // Only holds boolean flag, can be replaced in the future if we want
 }

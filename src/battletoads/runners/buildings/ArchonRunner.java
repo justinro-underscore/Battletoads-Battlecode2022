@@ -5,8 +5,8 @@ import battletoads.utils.Utils;
 
 public class ArchonRunner {
 
-    private static Direction[] possibleEnemyArchonDirections = new Direction[3];
-    private static int startingDirectionIdx = 0;
+    private static final int MAX_NUM_MINERS = 3; // Half the max num of miners TODO This doesn't work
+    private static int numMiners = 0;
 
     /**
      * Run a single turn for an Archon.
@@ -14,13 +14,15 @@ public class ArchonRunner {
      */
     public static void run(RobotController rc) throws GameActionException {
         Direction dir = Utils.directions[Utils.rng.nextInt(Utils.directions.length)];
-        if (Utils.rng.nextBoolean()) {
+        if (numMiners < MAX_NUM_MINERS) {
             // Let's try to build a miner.
             rc.setIndicatorString("Trying to build a miner");
             if (rc.canBuildRobot(RobotType.MINER, dir)) {
                 rc.buildRobot(RobotType.MINER, dir);
+                numMiners++;
             }
-        } else {
+        }
+        else {
             // Let's try to build a soldier.
             rc.setIndicatorString("Trying to build a soldier");
             if (rc.canBuildRobot(RobotType.SOLDIER, dir)) {

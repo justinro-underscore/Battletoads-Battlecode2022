@@ -3,6 +3,7 @@ package battletoads;
 import battlecode.common.*;
 import battletoads.runners.buildings.*;
 import battletoads.runners.droids.*;
+import battletoads.utils.Utils;
 
 /**
  * RobotPlayer is the class that describes your main robot strategy.
@@ -18,6 +19,19 @@ public strictfp class RobotPlayer {
      */
     public static int turnCount = 0;
 
+    private static void initSharedArr(RobotController rc) {
+        try {
+            rc.writeSharedArray(Utils.ARR_IDX_MINER_1, 0xFFF);
+            rc.writeSharedArray(Utils.ARR_IDX_MINER_2, 0xFFF);
+            rc.writeSharedArray(Utils.ARR_IDX_MINER_3, 0xFFF);
+            rc.writeSharedArray(Utils.ARR_IDX_MINER_4, 0xFFF);
+            rc.writeSharedArray(Utils.ARR_IDX_MINER_5, 0xFFF);
+            rc.writeSharedArray(Utils.ARR_IDX_MINER_6, 0xFFF);
+        }
+        // This should never be thrown
+        catch (GameActionException e) {}
+    }
+
     /**
      * run() is the method that is called when a robot is instantiated in the Battlecode world.
      * It is like the main function for your robot. If this method returns, the robot dies!
@@ -28,11 +42,11 @@ public strictfp class RobotPlayer {
     @SuppressWarnings("unused")
     public static void run(RobotController rc) throws GameActionException {
 
-        // Hello world! Standard output is very useful for debugging.
-        // Everything you say here will be directly viewable in your terminal when you run a match!
-
-        // You can also use indicators to save debug notes in replays.
-        rc.setIndicatorString("Hello world!");
+        // On initialization for archons...
+        if (rc.getType() == RobotType.ARCHON && rc.readSharedArray(Utils.ARR_IDX_INIT) == 0) {
+            initSharedArr(rc);
+            rc.writeSharedArray(Utils.ARR_IDX_INIT, 1);
+        }
 
         while (true) {
             // This code runs during the entire lifespan of the robot, which is why it is in an infinite

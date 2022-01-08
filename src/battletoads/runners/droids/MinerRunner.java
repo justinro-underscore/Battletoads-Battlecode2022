@@ -1,5 +1,8 @@
 package battletoads.runners.droids;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import battlecode.common.*;
 import battletoads.utils.Logging;
 import battletoads.utils.RobotUtils;
@@ -42,6 +45,9 @@ public class MinerRunner {
      */
     private static boolean searchAction(RobotController rc) throws GameActionException {
         mineLoc = findNextMiningSpot(rc);
+        if (mineLoc != null) {
+            rc.setIndicatorString(String.format("Claimed [%d, %d], heading there", mineLoc.x, mineLoc.y));
+        }
         currState = MinerState.MOVING;
         return true; // Always return true because the finding algorithm is very bytecode intensive
     }
@@ -56,6 +62,7 @@ public class MinerRunner {
         if (mineLoc != null) {
             // TODO should navigate to the square adjacent to the mining location, since it can still mine from there
             // TODO should verify that no one is currently mining the lead it is going for
+            // TODO Anomalies can make the robot lose its target
 
             // if (RobotUtils.moveTo(rc, mineLoc)) {
             //     currState = MinerState.MINING;
@@ -98,42 +105,77 @@ public class MinerRunner {
 
         // When we are done, go back to searching for the next lead
         if (rc.senseLead(mineLoc) == 0) {
+            if (minerArrIdx >= 0) {
+                rc.writeSharedArray(Utils.ARR_IDX_MINER_1 + minerArrIdx, 0xFFF);
+            }
+
             currState = MinerState.SEARCHING;
             return false;
         }
         return true;
     }
 
+    private static final int X_OFFSET = 6;
+    private static final int X_MASK = 0x3F;
+
+    private static int minerArrIdx = -1;
+
     /**
      * Finds the closest location for mining
      * @return
      */
     private static MapLocation findNextMiningSpot(RobotController rc) {
-        // TODO This algorithm is pretty bytecode intensive, could work on that a bit
-        MapLocation currLoc = rc.getLocation();
-        // Look through all points around current location that the robot can sense
-        for (int[] point : SENSE_POINTS) {
-            MapLocation loc = new MapLocation(currLoc.x + point[0], currLoc.y + point[1]);
+        try {
+            MapLocation[] potentialLocs = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(), RobotType.MINER.visionRadiusSquared);
 
-            try {
-                // Verify the map location is valid
-                if (rc.onTheMap(loc)) {
-                    // If there is lead here
-                    if (rc.senseLead(loc) > 0) {
-                        // Verify there is no miner currently mining this
-                        RobotInfo localRobot = rc.senseRobotAtLocation(loc); // TODO should be changed to a radius of 2 around the loc when miners are navigating to next to the location
-                        if (localRobot == null || localRobot.getType() != RobotType.MINER) {
-                            return loc;
-                        }
-                    }
+            Set<MapLocation> takenLocs = new HashSet<>();
+            int[] takenLocsArr = {rc.readSharedArray(Utils.ARR_IDX_MINER_1), rc.readSharedArray(Utils.ARR_IDX_MINER_2),
+                rc.readSharedArray(Utils.ARR_IDX_MINER_3), rc.readSharedArray(Utils.ARR_IDX_MINER_4),
+                rc.readSharedArray(Utils.ARR_IDX_MINER_5), rc.readSharedArray(Utils.ARR_IDX_MINER_6)};
+
+            minerArrIdx = -1;
+            for (int i = 0; i < takenLocsArr.length; i++) {
+                int locRaw = takenLocsArr[i];
+                if (locRaw != 0xFFF) {
+                    takenLocs.add(new MapLocation((locRaw >> X_OFFSET) & X_MASK, locRaw & X_MASK));
+                }
+                else if (minerArrIdx < 0) {
+                    minerArrIdx = i;
                 }
             }
-            // This should never throw an exception
-            catch (GameActionException ex) {
-                Logging.error(String.format("Robot [%d] threw error while finding next lead at {%d, %d}: %s", rc.getID(), loc.x, loc.y, ex.getMessage()));
-            }
+            // System.out.println(String.format("[%d, %d], [%d, %d], [%d, %d], [%d, %d], [%d, %d], [%d, %d]",
+            //     (takenLocsArr[0] >> X_OFFSET) & X_MASK, takenLocsArr[0] & X_MASK,
+            //     (takenLocsArr[1] >> X_OFFSET) & X_MASK, takenLocsArr[1] & X_MASK,
+            //     (takenLocsArr[2] >> X_OFFSET) & X_MASK, takenLocsArr[2] & X_MASK,
+            //     (takenLocsArr[3] >> X_OFFSET) & X_MASK, takenLocsArr[3] & X_MASK,
+            //     (takenLocsArr[4] >> X_OFFSET) & X_MASK, takenLocsArr[4] & X_MASK,
+            //     (takenLocsArr[5] >> X_OFFSET) & X_MASK, takenLocsArr[5] & X_MASK));
 
+            // Look through all points around current location that the robot can sense
+            for (MapLocation loc : potentialLocs) {
+                try {
+                    // If there is lead here
+                    if (rc.senseLead(loc) > 0 && !takenLocs.contains(loc)) {
+                        // System.out.println(String.format("Claimed [%d, %d] - %d", loc.x, loc.y, minerArrIdx));
+                        if (minerArrIdx >= 0) {
+                            rc.writeSharedArray(Utils.ARR_IDX_MINER_1 + minerArrIdx, ((loc.x << X_OFFSET) | loc.y));
+                        }
+                        else {
+                            Logging.warn(String.format("Miner locs filled, robot [%d] couldn't get a spot", rc.getID()));
+                        }
+                        return loc;
+                    }
+                }
+                // This should never throw an exception
+                catch (GameActionException ex) {
+                    Logging.error(String.format("Robot [%d] threw error while finding next lead at {%d, %d}: %s", rc.getID(), loc.x, loc.y, ex.getMessage()));
+                }
+
+            }
         }
+        // We should never reach here, all places where GameActionException can be thrown should be handled
+        catch (GameActionException ex) {}
+
         return null;
     }
 }
