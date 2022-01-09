@@ -60,21 +60,14 @@ public class ASPlanner {
      * @param MapLocation to project
      * @return projected location
      * */
-    private MapLocation project( MapLocation location ) {
-        double theta = Math.atan( location.y / location.x );
-        int radius = (int) Math.floor( Math.sqrt( robotController.getType().visionRadiusSquared ) );
+    public MapLocation project( MapLocation start, MapLocation location, int radiusSquared ) {
+        double ratio = Math.sqrt( (double) radiusSquared / start.distanceSquaredTo( location ) );
 
-        int x_factor = 1;
-        int y_factor = 1;
-        if ( s_goal.y < s_start.y ) {
-            y_factor = -1;
-        }
-        if ( s_goal.x < s_start.x ) {
-            x_factor = -1;
-        }
+        double dx = location.x - start.x;
+        double dy = location.y - start.y;
 
-        int x = s_start.x + x_factor * radius * (int) Math.floor( Math.cos( theta ) );
-        int y = s_start.y + y_factor * radius * (int) Math.floor( Math.sin( theta ) );
+        int x = start.x + (int) Math.floor( ratio * dx );
+        int y = start.y + (int) Math.floor( ratio * dy );
 
         MapLocation newLocation = new MapLocation( x, y );
         return ( newLocation );
@@ -167,7 +160,7 @@ public class ASPlanner {
 
         // Project goal onto start radius if too far away
         if ( !robotController.canSenseLocation( s_goal ) ) {
-            s_goal = project( s_goal );
+            s_goal = project( s_start, s_goal, robotController.getType().visionRadiusSquared );
         }
 
         // Init stuff
