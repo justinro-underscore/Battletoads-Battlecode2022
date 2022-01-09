@@ -61,7 +61,7 @@ public class ASPlanner {
      * @return projected location
      * */
     public MapLocation project( MapLocation start, MapLocation location, int radiusSquared ) {
-        double ratio = Math.sqrt( radiusSquared / start.distanceSquaredTo( location ) );
+        double ratio = Math.sqrt( (double) radiusSquared / start.distanceSquaredTo( location ) );
 
         double dx = location.x - start.x;
         double dy = location.y - start.y;

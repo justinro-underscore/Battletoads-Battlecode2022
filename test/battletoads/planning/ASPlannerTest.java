@@ -25,8 +25,8 @@ public class ASPlannerTest {
         radiusSquared = 25;
     }
 
-	@Test
-	public void testProjectQuadOne() {
+    @Test
+    public void testProjectQuadOne() {
         MapLocation goal = new MapLocation( 15, 21 );
 
         MapLocation expected = new MapLocation( 12, 14 );
@@ -34,10 +34,10 @@ public class ASPlannerTest {
 
         assertEquals( expected.x, projected.x );
         assertEquals( expected.y, projected.y );
-	}
+    }
 
-	@Test
-	public void testProjectQuadTwo() {
+    @Test
+    public void testProjectQuadTwo() {
         MapLocation goal = new MapLocation( 15, 4 );
 
         MapLocation expected = new MapLocation( 13, 6 );
@@ -45,10 +45,10 @@ public class ASPlannerTest {
 
         assertEquals( expected.x, projected.x );
         assertEquals( expected.y, projected.y );
-	}
+    }
 
-	@Test
-	public void testProjectQuadThree() {
+    @Test
+    public void testProjectQuadThree() {
         MapLocation goal = new MapLocation( 3, 8 );
 
         MapLocation expected = new MapLocation( 5, 8 );
@@ -56,10 +56,10 @@ public class ASPlannerTest {
 
         assertEquals( expected.x, projected.x );
         assertEquals( expected.y, projected.y );
-	}
+    }
 
-	@Test
-	public void testProjectQuadFour() {
+    @Test
+    public void testProjectQuadFour() {
         MapLocation goal = new MapLocation( 3, 15 );
 
         MapLocation expected = new MapLocation( 5, 12 );
@@ -67,10 +67,10 @@ public class ASPlannerTest {
 
         assertEquals( expected.x, projected.x );
         assertEquals( expected.y, projected.y );
-	}
+    }
 
     @Test
-	public void testProjectInside() {
+    public void testProjectInside() {
         MapLocation goal = new MapLocation( 12, 12 );
 
         MapLocation expected = new MapLocation( 13, 13 );
@@ -78,5 +78,5 @@ public class ASPlannerTest {
 
         assertEquals( expected.x, projected.x );
         assertEquals( expected.y, projected.y );
-	}
+    }
 }
