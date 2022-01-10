@@ -9,7 +9,7 @@ import java.util.*;
 
 import static battletoads.Utils.*;
 import static battletoads.RobotUtils.*;
-import static battletoads.Logging.error;
+import static battletoads.Logging.*;
 
 /**
  * Fun class that is going to be rushing the enemy archons
@@ -28,7 +28,7 @@ public class SoldierRunner {
     //RUSHER => Move to an enemy archon and attempt to choke it
     //HUNTER => Just stand and shoot currently
     //DEFENDER => Just stand and shoot currently
-    public enum SoldierType {RUSHER, HUNTER, DEFENDER}
+    public enum SoldierType {RUSHER, HUNTER, DEFENDER, CHOKER}
 
     private static SoldierType type = SoldierType.RUSHER;
 
@@ -42,6 +42,7 @@ public class SoldierRunner {
     private static MapLocation[] possibleEnemyArchonDirections = new MapLocation[3];
     private static int startingDirectionIdx = 0;
 
+    private static int huntTurns = 0;
 
     /**
      * Run a single turn for a Soldier.
@@ -55,8 +56,9 @@ public class SoldierRunner {
             type = whatShouldIDoDaddy;
         }
 
-
-        if (type == SoldierType.RUSHER) {
+        if (type == SoldierType.CHOKER) {
+            choke(rc);
+        } else if (type == SoldierType.RUSHER) {
             rush(rc);
         } else if (type == SoldierType.HUNTER) {
             hunt(rc);
@@ -81,6 +83,20 @@ public class SoldierRunner {
 
         if (targetArchon == null) {
             findAnArchon(rc, true);
+        } else {
+            //We should make sure that the archon is still there if we can see it..
+            if (rc.canSenseLocation(targetArchon)) {
+                try {
+                    RobotInfo robotInfo = rc.senseRobotAtLocation(targetArchon);
+                    if (robotInfo == null || robotInfo.getType() != RobotType.ARCHON) {
+                        targetArchon = null;
+                        scoutLocation = null;
+                        return;
+                    }
+                } catch (GameActionException e) {
+                    error("Bututoooo");
+                }
+            }
         }
 
         //We still don't have one, probably means we are
@@ -90,6 +106,20 @@ public class SoldierRunner {
         if (scoutLocation == null && targetArchon == null) {
             scoutALocation(rc);
             return;
+        } else {
+            if (rc.canSenseLocation(scoutLocation)) {
+                try {
+                    RobotInfo robotInfo = rc.senseRobotAtLocation(scoutLocation);
+                    if (robotInfo == null || robotInfo.getType() != RobotType.ARCHON) {
+                        targetArchon = null;
+                        scoutLocation = null;
+                        startingDirectionIdx = (startingDirectionIdx+1)%3;
+                        return;
+                    }
+                } catch (GameActionException e) {
+                    error("Bututoooo");
+                }
+            }
         }
 
         RobotInfo[] robots = rc.senseNearbyRobots();
@@ -101,7 +131,7 @@ public class SoldierRunner {
                         if (rc.isActionReady()) {
                             rc.attack(info.getLocation());
                         }
-                        reportEnemyArchon(rc, info);
+                        type = SoldierType.CHOKER;
                         //We've attacked and are blocking, we can return
                         return;
                     } catch (GameActionException e) {
@@ -110,6 +140,7 @@ public class SoldierRunner {
                     }
                 } else {
                     //We need to attempt to choke it
+                    reportEnemyArchon(rc, info);
                     chokeArchon(rc, info);
                 }
             }
@@ -122,6 +153,13 @@ public class SoldierRunner {
 
     //Will find the first enemy and walk around it and stuff
     private static void hunt(RobotController rc) {
+        if (huntTurns > 30) {
+            type = SoldierType.RUSHER;
+            targetArchon = null;
+            scoutLocation = null;
+            huntTurns = 0;
+        }
+        huntTurns++;
         findAnArchon(rc, false);
         moveToArchon(rc);
         fallBackShoot(rc, null);
@@ -162,23 +200,25 @@ public class SoldierRunner {
 
         if (locations.isEmpty()) {
             //No more places to choke, time to hunt I guess
-            type = SoldierType.HUNTER;
-            hunt(rc);
+            scoutLocation = null;
+            targetArchon = null;
+            startingDirectionIdx = (startingDirectionIdx+1)%3;
+            return;
         }
 
         if (chokeLocation != null) {
             try {
-                rc.senseRobotAtLocation(chokeLocation);
+                if (rc.senseRobotAtLocation(chokeLocation) == null) {
+                    chokeLocation = locations.get(0);
+                }
             } catch (GameActionException e) {
                 error("Sensing for previous choke location failed");
                 return;
             }
         }
 
-        chokeLocation = locations.get(0);
-
         try {
-            RobotUtils.moveTo(rc, chokeLocation);
+            RobotUtils.moveTo(rc, locations.get(0));
         } catch (GameActionException e) {
             error("Unable to move to choke location");
             fallBackShoot(rc, null);
@@ -248,12 +288,13 @@ public class SoldierRunner {
         try {
             int locationInt = rc.readSharedArray(ARR_IDX_SOLDIER_1);
             if (locationInt != 0) {
+                error("location int " + locationInt);
                 MapLocation location = decodeFromInt(locationInt, careIfChoked);
                 if (location != null) {
                     targetArchon = location;
-                    return;
                 }
             }
+            /*
             locationInt = rc.readSharedArray(ARR_IDX_SOLDIER_2);
             if(locationInt != 0) {
                 MapLocation location = decodeFromInt(locationInt,careIfChoked);
@@ -277,6 +318,7 @@ public class SoldierRunner {
                     targetArchon = location;
                 }
             }
+             */
         } catch (GameActionException e) {
             error("CANT READ A DUMBO ARRAY BLAH BLAH BLAH");
         }
@@ -324,7 +366,8 @@ public class SoldierRunner {
         }
 
         Random random = new Random();
-        scoutLocation = possibleEnemyArchonDirections[random.nextInt(3)];
+        startingDirectionIdx = random.nextInt(3);
+        scoutLocation = possibleEnemyArchonDirections[startingDirectionIdx];
 
         try {
             RobotUtils.moveTo(rc, scoutLocation);
@@ -340,29 +383,83 @@ public class SoldierRunner {
         String location = "";
         //XXYYC
         //C = Boolean if archon is choked
-        location = location + enemyArchon.getLocation().x + enemyArchon.getLocation().y + "0";
+        int x = enemyArchon.getLocation().x;
+        String xString = ""+x;
+        if (x < 10) {
+            xString = "0" + x;
+        }
+
+        int y = enemyArchon.getLocation().y;
+        String yString = ""+y;
+        if (y < 10) {
+            yString = "0" + y;
+        }
+
+        location = location + xString + yString + "0";
         int locationInt = Integer.parseInt(location);
 
         try {
-            if (rc.readSharedArray(ARR_IDX_SOLDIER_1) == locationInt
-                    || rc.readSharedArray(ARR_IDX_SOLDIER_2) == locationInt
-                    || rc.readSharedArray(ARR_IDX_SOLDIER_3) == locationInt
-                    || rc.readSharedArray(ARR_IDX_SOLDIER_4) == locationInt) {
+            if (rc.readSharedArray(ARR_IDX_SOLDIER_1) == locationInt) {
                 return;
             }
 
             if (rc.readSharedArray(ARR_IDX_SOLDIER_1) == 0) {
                 rc.writeSharedArray(ARR_IDX_SOLDIER_1, locationInt);
-            } else if (rc.readSharedArray(ARR_IDX_SOLDIER_2) == 0) {
+            }
+            /*else if (rc.readSharedArray(ARR_IDX_SOLDIER_2) == 0) {
                 rc.writeSharedArray(ARR_IDX_SOLDIER_2, locationInt);
             } else if (rc.readSharedArray(ARR_IDX_SOLDIER_3) == 0) {
                 rc.writeSharedArray(ARR_IDX_SOLDIER_3, locationInt);
             } else if (rc.readSharedArray(ARR_IDX_SOLDIER_4) == 0) {
                 rc.writeSharedArray(ARR_IDX_SOLDIER_4, locationInt);
             }
+             */
 
         } catch (GameActionException e) {
             error("WAAAWAAA");
+        }
+    }
+
+    //Similar to rush but we should be near an archon already
+    //If not, we set back to rush
+    private static void choke(RobotController rc) {
+        RobotInfo[] robots = rc.senseNearbyRobots();
+        for (RobotInfo info : robots) {
+            if (info.getTeam() != myTeam && info.getType() == RobotType.ARCHON) {
+                if (rc.getLocation().isAdjacentTo(info.getLocation())) {
+                    //If we are next to the archon, attack it
+                    try {
+                        if (rc.isActionReady()) {
+                            rc.attack(info.getLocation());
+                        }
+                        //We've attacked and are blocking, we can return
+                        return;
+                    } catch (GameActionException e) {
+                        error("Can't attack here");
+                        return;
+                    }
+                } else {
+                    //We killed it!
+                    type = SoldierType.RUSHER;
+                    targetArchon = null;
+                    scoutLocation = null;
+
+                    try {
+                        //Wipe the saved location if its reported
+                        int location = rc.readSharedArray(ARR_IDX_SOLDIER_1);
+                        if (location != 0) {
+                            MapLocation reportedArchon = decodeFromInt(location, false);
+                            if (rc.getLocation().isAdjacentTo(reportedArchon)) {
+                                rc.writeSharedArray(ARR_IDX_SOLDIER_1, 0);
+                            }
+                        }
+                    } catch (GameActionException e) {
+                        error("Ah sheeznits");
+                    }
+
+                    fallBackShoot(rc, null);
+                }
+            }
         }
     }
 }
