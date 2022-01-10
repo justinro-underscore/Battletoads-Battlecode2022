@@ -1,4 +1,4 @@
-package battletoads.planning;
+package battletoads;
 
 import java.util.PriorityQueue;
 
@@ -7,9 +7,9 @@ import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
-import battletoads.utils.Utils;
-import battletoads.planning.location.Location;
-import battletoads.planning.location.LocationComparator;
+import battletoads.Utils;
+import battletoads.Location;
+import battletoads.LocationComparator;
 
 /**
  * Path planning using a simple, short sighted, greedy search

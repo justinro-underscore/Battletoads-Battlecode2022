@@ -1,13 +1,13 @@
-package battletoads.runners.droids;
+package battletoads;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import battlecode.common.*;
-import battletoads.utils.Logging;
-import battletoads.utils.RobotUtils;
-import battletoads.utils.Utils;
-import battletoads.utils.RobotUtils.MoveToResult;
+import battletoads.Logging;
+import battletoads.RobotUtils;
+import battletoads.Utils;
+import battletoads.RobotUtils.MoveToResult;
 
 public class MinerRunner {
 

@@ -1,7 +1,7 @@
-package battletoads.utils;
+package battletoads;
 
 import battlecode.common.*;
-import battletoads.planning.*;
+import battletoads.*;
 
 /**
  * Utility functions that are used to manipulate a RobotController

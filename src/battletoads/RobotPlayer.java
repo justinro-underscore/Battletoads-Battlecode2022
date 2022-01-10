@@ -1,9 +1,7 @@
 package battletoads;
 
 import battlecode.common.*;
-import battletoads.runners.buildings.*;
-import battletoads.runners.droids.*;
-import battletoads.utils.Utils;
+import battletoads.*;
 
 /**
  * RobotPlayer is the class that describes your main robot strategy.

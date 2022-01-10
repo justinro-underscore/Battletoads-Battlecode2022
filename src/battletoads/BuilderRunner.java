@@ -1,9 +1,9 @@
-package battletoads.runners.droids;
+package battletoads;
 
 import java.util.Arrays;
 
 import battlecode.common.*;
-import battletoads.utils.Utils;
+import battletoads.Utils;
 
 public class BuilderRunner {
 

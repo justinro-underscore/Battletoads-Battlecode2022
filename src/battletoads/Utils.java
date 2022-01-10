@@ -1,4 +1,4 @@
-package battletoads.utils;
+package battletoads;
 
 import battlecode.common.*;
 

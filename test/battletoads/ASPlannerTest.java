@@ -1,4 +1,4 @@
-package battletoads.planning;
+package battletoads;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -7,7 +7,7 @@ import org.junit.BeforeClass;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
-import battletoads.planning.ASPlanner;
+import battletoads.ASPlanner;
 
 public class ASPlannerTest {
 

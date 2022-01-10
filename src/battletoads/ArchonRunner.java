@@ -1,7 +1,7 @@
-package battletoads.runners.buildings;
+package battletoads;
 
 import battlecode.common.*;
-import battletoads.utils.Utils;
+import battletoads.Utils;
 
 public class ArchonRunner {
 

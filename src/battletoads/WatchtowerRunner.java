@@ -1,4 +1,4 @@
-package battletoads.runners.buildings;
+package battletoads;
 
 import battlecode.common.GameActionException;
 import battlecode.common.RobotController;

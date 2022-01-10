@@ -1,4 +1,4 @@
-package battletoads.planning.location;
+package battletoads;
 
 import java.util.Comparator;
 

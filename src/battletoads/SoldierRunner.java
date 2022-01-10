@@ -1,15 +1,15 @@
-package battletoads.runners.droids;
+package battletoads;
 
 import battlecode.common.*;
-import battletoads.utils.RobotUtils;
-import battletoads.utils.Utils;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import battletoads.RobotUtils;
+import battletoads.Utils;
+//import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.*;
 
-import static battletoads.utils.LogLevel.ERROR;
-import static battletoads.utils.Logging.*;
-import static battletoads.utils.Utils.*;
+import static battletoads.Utils.*;
+import static battletoads.RobotUtils.*;
+import static battletoads.Logging.error;
 
 /**
  * Fun class that is going to be rushing the enemy archons
@@ -291,7 +291,10 @@ public class SoldierRunner {
         String locationString = locationInt.toString();
         String xCord = locationString.substring(0, 1);
         String yCord = locationString.substring(2, 3);
-        String isChoked = locationString.substring(4);
+        String isChoked = "0";
+        if ( locationString.length() >= 5 ) {
+            isChoked = locationString.substring(4);
+        }
 
         if (isChoked.equals("1") && careIfChoked) {
             return null;

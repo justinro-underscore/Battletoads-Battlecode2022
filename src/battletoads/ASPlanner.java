@@ -1,4 +1,4 @@
-package battletoads.planning;
+package battletoads;
 
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -10,10 +10,10 @@ import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
-import battletoads.utils.Logging;
-import battletoads.utils.Utils;
-import battletoads.planning.location.ASComparator;
-import battletoads.planning.location.ASLocation;
+import battletoads.Logging;
+import battletoads.Utils;
+import battletoads.ASComparator;
+import battletoads.ASLocation;
 
 /**
  * A* planning
