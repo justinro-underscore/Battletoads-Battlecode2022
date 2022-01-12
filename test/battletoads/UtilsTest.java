@@ -7,11 +7,9 @@ import org.junit.BeforeClass;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
-import battletoads.ASPlanner;
+import battletoads.Utils;
 
-public class ASPlannerTest {
-
-    private static ASPlanner planner;
+public class UtilsTest {
 
     private static MapLocation start;
 
@@ -19,9 +17,7 @@ public class ASPlannerTest {
 
     @BeforeClass
     public static void setUp() {
-        planner = new ASPlanner( null );
         start = new MapLocation( 10, 10 );
-
         radiusSquared = 25;
     }
 
@@ -30,7 +26,7 @@ public class ASPlannerTest {
         MapLocation goal = new MapLocation( 15, 21 );
 
         MapLocation expected = new MapLocation( 12, 14 );
-        MapLocation projected = planner.project( start, goal, radiusSquared );
+        MapLocation projected = Utils.project( start, goal, radiusSquared );
 
         assertEquals( expected.x, projected.x );
         assertEquals( expected.y, projected.y );
@@ -41,7 +37,7 @@ public class ASPlannerTest {
         MapLocation goal = new MapLocation( 15, 4 );
 
         MapLocation expected = new MapLocation( 13, 6 );
-        MapLocation projected = planner.project( start, goal, radiusSquared );
+        MapLocation projected = Utils.project( start, goal, radiusSquared );
 
         assertEquals( expected.x, projected.x );
         assertEquals( expected.y, projected.y );
@@ -52,7 +48,7 @@ public class ASPlannerTest {
         MapLocation goal = new MapLocation( 3, 8 );
 
         MapLocation expected = new MapLocation( 5, 8 );
-        MapLocation projected = planner.project( start, goal, radiusSquared );
+        MapLocation projected = Utils.project( start, goal, radiusSquared );
 
         assertEquals( expected.x, projected.x );
         assertEquals( expected.y, projected.y );
@@ -63,7 +59,7 @@ public class ASPlannerTest {
         MapLocation goal = new MapLocation( 3, 15 );
 
         MapLocation expected = new MapLocation( 5, 12 );
-        MapLocation projected = planner.project( start, goal, radiusSquared );
+        MapLocation projected = Utils.project( start, goal, radiusSquared );
 
         assertEquals( expected.x, projected.x );
         assertEquals( expected.y, projected.y );
@@ -74,7 +70,7 @@ public class ASPlannerTest {
         MapLocation goal = new MapLocation( 12, 12 );
 
         MapLocation expected = new MapLocation( 13, 13 );
-        MapLocation projected = planner.project( start, goal, radiusSquared );
+        MapLocation projected = Utils.project( start, goal, radiusSquared );
 
         assertEquals( expected.x, projected.x );
         assertEquals( expected.y, projected.y );

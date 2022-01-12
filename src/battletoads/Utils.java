@@ -43,6 +43,25 @@ public class Utils {
     }
 
     /**
+     * Projects a map location onto circle of vision
+     *
+     * @param MapLocation to project
+     * @return projected location
+     * */
+    public static MapLocation project( MapLocation start, MapLocation location, int radiusSquared ) {
+        double ratio = Math.sqrt( (double) radiusSquared / start.distanceSquaredTo( location ) );
+
+        double dx = location.x - start.x;
+        double dy = location.y - start.y;
+
+        int x = start.x + (int) Math.floor( ratio * dx );
+        int y = start.y + (int) Math.floor( ratio * dy );
+
+        MapLocation newLocation = new MapLocation( x, y );
+        return ( newLocation );
+    }
+
+    /**
      * This defines all of the points inside a circle based on the radius squared
      * More can be added from the circlepoints.py script in python directory
      */

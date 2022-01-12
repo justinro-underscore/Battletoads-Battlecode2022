@@ -55,25 +55,6 @@ public class ASPlanner {
     }
 
     /**
-     * Projects a map location onto circle of vision
-     *
-     * @param MapLocation to project
-     * @return projected location
-     * */
-    public MapLocation project( MapLocation start, MapLocation location, int radiusSquared ) {
-        double ratio = Math.sqrt( (double) radiusSquared / start.distanceSquaredTo( location ) );
-
-        double dx = location.x - start.x;
-        double dy = location.y - start.y;
-
-        int x = start.x + (int) Math.floor( ratio * dx );
-        int y = start.y + (int) Math.floor( ratio * dy );
-
-        MapLocation newLocation = new MapLocation( x, y );
-        return ( newLocation );
-    }
-
-    /**
      * Finds path from start to end
      *  adds map locations to stack
      *
@@ -160,7 +141,7 @@ public class ASPlanner {
 
         // Project goal onto start radius if too far away
         if ( !robotController.canSenseLocation( s_goal ) ) {
-            s_goal = project( s_start, s_goal, robotController.getType().visionRadiusSquared );
+            s_goal = Utils.project( s_start, s_goal, robotController.getType().visionRadiusSquared );
         }
 
         // Init stuff
