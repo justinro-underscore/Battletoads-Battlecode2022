@@ -70,6 +70,14 @@ public class GreedyPlanner {
         // Default to center direction (this only happens if we cannot move in any direction)
         Direction nextDirection = Direction.CENTER;
 
+        // Check if target is right next to us and just move there immediately
+        if ( destination.isAdjacentTo( robotController.getLocation() ) ) {
+            Direction direction = robotController.getLocation().directionTo( destination );
+            if ( robotController.canMove( direction  ) ) {
+                return ( direction );
+            }
+        }
+
         if ( locations.isEmpty() ) {
             // Add adjacent robot tiles to queue
             for ( Direction direction : Utils.directions ) {
